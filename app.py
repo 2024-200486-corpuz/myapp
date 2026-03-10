@@ -29,8 +29,7 @@ Users can create tasks, assign priorities, track progress, and visualize their w
     st.info("Use the sidebar to create and manage your schedule.")
 
     st.image(
-        "https://images.unsplash.com/photo-1506784983877-45594efa4cbe",
-        use_column_width=True
+        "https://images.unsplash.com/photo-1506784983877-45594efa4cbe", width=True
     )
 
 # ---------------- CREATE SCHEDULE ----------------
@@ -73,8 +72,6 @@ elif page == "Create Schedule":
 
         reminder = st.checkbox("Enable Reminder")
 
-        file_upload = st.file_uploader("Upload File")
-
         color = st.color_picker("Task Color")
 
         motivation = st.selectbox(
@@ -101,8 +98,31 @@ elif page == "Create Schedule":
 
         st.success("✅ Schedule saved successfully!")
 
-        st.write("### Schedule Summary")
-        st.json(new_task)
+        # -------- Improved Summary UI --------
+        st.subheader("📌 Schedule Summary")
+
+        col1, col2, col3 = st.columns(3)
+
+        col1.metric("Task", task)
+        col2.metric("Priority", priority)
+        col3.metric("Duration (hrs)", duration)
+
+        st.markdown("### 📅 Schedule Details")
+
+        detail_col1, detail_col2 = st.columns(2)
+
+        with detail_col1:
+            st.write("**Name:**", name)
+            st.write("**Category:**", category)
+            st.write("**Date:**", schedule_date)
+
+        with detail_col2:
+            st.write("**Time:**", schedule_time)
+            st.write("**Repeat:**", repeat)
+            st.write("**Motivation Level:**", motivation)
+
+        if description:
+            st.info(f"📝 Notes: {description}")
 
 # ---------------- DASHBOARD ----------------
 elif page == "Schedule Dashboard":
@@ -184,9 +204,7 @@ elif page == "Schedule Dashboard":
         st.subheader("📊 Productivity Metrics")
 
         total_tasks = len(df)
-
         total_hours = df["Duration"].sum()
-
         completed_tasks = len(df[df["Status"] == "Done"])
 
         col1, col2, col3 = st.columns(3)
@@ -199,20 +217,7 @@ elif page == "Schedule Dashboard":
 
         # ---------- CHART ----------
         st.subheader("📈 Task Duration Chart")
-
         st.bar_chart(df.set_index("Task")["Duration"])
-
-        # ---------- DOWNLOAD CSV ----------
-        st.subheader("⬇ Download Schedule")
-
-        csv = df.to_csv(index=False).encode("utf-8")
-
-        st.download_button(
-            label="Download Schedule as CSV",
-            data=csv,
-            file_name="schedule.csv",
-            mime="text/csv",
-        )
 
 # ---------------- ABOUT PAGE ----------------
 elif page == "About":
@@ -225,28 +230,24 @@ This scheduling planner helps users organize and manage their daily tasks.
 Users can create schedules, assign priorities, and track their productivity.
 
 ### Target Users
-- Students
-- Professionals
+- Students  
+- Professionals  
 - Anyone who wants to manage their time effectively
 
 ### Inputs Collected
-The application collects:
-- Name
-- Task or subject
-- Category
-- Priority level
-- Date and time
-- Duration
-- Notes
-- File uploads
-- Reminder option
-- Motivation level
+- Name  
+- Task or subject  
+- Category  
+- Priority level  
+- Date and time  
+- Duration  
+- Notes  
+- Reminder option  
+- Motivation level  
 
 ### Outputs Displayed
-The app shows:
-- Schedule summaries
-- Task tables
-- Charts showing duration
-- Productivity metrics
-- Downloadable schedule file
+- Schedule summaries  
+- Task tables  
+- Charts showing duration  
+- Productivity metrics  
 """)
